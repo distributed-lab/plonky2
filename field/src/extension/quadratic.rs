@@ -6,7 +6,6 @@ use num::bigint::BigUint;
 use serde::{Deserialize, Serialize};
 
 use crate::extension::{Extendable, FieldExtension, Frobenius, OEF};
-use crate::ops::Square;
 use crate::types::{Field, Sample};
 
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Serialize, Deserialize)]
@@ -181,7 +180,7 @@ impl<F: Extendable<2>> Mul for QuadraticExtension<F> {
     type Output = Self;
 
     #[inline]
-    default fn mul(self, rhs: Self) -> Self {
+    fn mul(self, rhs: Self) -> Self {
         let Self([a0, a1]) = self;
         let Self([b0, b1]) = rhs;
 
@@ -196,21 +195,6 @@ impl<F: Extendable<2>> MulAssign for QuadraticExtension<F> {
     #[inline]
     fn mul_assign(&mut self, rhs: Self) {
         *self = *self * rhs;
-    }
-}
-
-impl<F: Extendable<2>> Square for QuadraticExtension<F> {
-    #[inline(always)]
-    fn square(&self) -> Self {
-        // Specialising mul reduces the computation of c1 from 2 muls
-        // and one add to one mul and a shift
-
-        let Self([a0, a1]) = *self;
-
-        let c0 = a0.square() + <Self as OEF<2>>::W * a1.square();
-        let c1 = a0 * a1.double();
-
-        Self([c0, c1])
     }
 }
 

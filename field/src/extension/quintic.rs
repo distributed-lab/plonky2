@@ -7,7 +7,6 @@ use num::traits::Pow;
 use serde::{Deserialize, Serialize};
 
 use crate::extension::{Extendable, FieldExtension, Frobenius, OEF};
-use crate::ops::Square;
 use crate::types::{Field, Sample};
 
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Serialize, Deserialize)]
@@ -214,7 +213,7 @@ impl<F: Extendable<5>> Mul for QuinticExtension<F> {
     type Output = Self;
 
     #[inline]
-    default fn mul(self, rhs: Self) -> Self {
+    fn mul(self, rhs: Self) -> Self {
         let Self([a0, a1, a2, a3, a4]) = self;
         let Self([b0, b1, b2, b3, b4]) = rhs;
         let w = <Self as OEF<5>>::W;
@@ -233,25 +232,6 @@ impl<F: Extendable<5>> MulAssign for QuinticExtension<F> {
     #[inline]
     fn mul_assign(&mut self, rhs: Self) {
         *self = *self * rhs;
-    }
-}
-
-impl<F: Extendable<5>> Square for QuinticExtension<F> {
-    #[inline(always)]
-    fn square(&self) -> Self {
-        let Self([a0, a1, a2, a3, a4]) = *self;
-        let w = <Self as OEF<5>>::W;
-        let double_w = <Self as OEF<5>>::W.double();
-
-        let c0 = a0.square() + double_w * (a1 * a4 + a2 * a3);
-        let double_a0 = a0.double();
-        let c1 = double_a0 * a1 + double_w * a2 * a4 + w * a3 * a3;
-        let c2 = double_a0 * a2 + a1 * a1 + double_w * a4 * a3;
-        let double_a1 = a1.double();
-        let c3 = double_a0 * a3 + double_a1 * a2 + w * a4 * a4;
-        let c4 = double_a0 * a4 + double_a1 * a3 + a2 * a2;
-
-        Self([c0, c1, c2, c3, c4])
     }
 }
 

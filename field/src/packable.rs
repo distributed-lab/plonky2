@@ -9,7 +9,7 @@ pub trait Packable: Field {
 }
 
 impl<F: Field> Packable for F {
-    default type Packing = Self;
+    type Packing = Self;
 }
 
 #[cfg(all(
