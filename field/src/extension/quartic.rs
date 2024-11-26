@@ -7,7 +7,6 @@ use num::traits::Pow;
 use serde::{Deserialize, Serialize};
 
 use crate::extension::{Extendable, FieldExtension, Frobenius, OEF};
-use crate::ops::Square;
 use crate::types::{Field, Sample};
 
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Serialize, Deserialize)]
@@ -205,7 +204,7 @@ impl<F: Extendable<4>> Mul for QuarticExtension<F> {
     type Output = Self;
 
     #[inline]
-    default fn mul(self, rhs: Self) -> Self {
+    fn mul(self, rhs: Self) -> Self {
         let Self([a0, a1, a2, a3]) = self;
         let Self([b0, b1, b2, b3]) = rhs;
 
@@ -222,21 +221,6 @@ impl<F: Extendable<4>> MulAssign for QuarticExtension<F> {
     #[inline]
     fn mul_assign(&mut self, rhs: Self) {
         *self = *self * rhs;
-    }
-}
-
-impl<F: Extendable<4>> Square for QuarticExtension<F> {
-    #[inline(always)]
-    fn square(&self) -> Self {
-        let Self([a0, a1, a2, a3]) = *self;
-        let w = <Self as OEF<4>>::W;
-
-        let c0 = a0.square() + w * (a1 * a3.double() + a2.square());
-        let c1 = (a0 * a1 + w * a2 * a3).double();
-        let c2 = a0 * a2.double() + a1.square() + w * a3.square();
-        let c3 = (a0 * a3 + a1 * a2).double();
-
-        Self([c0, c1, c2, c3])
     }
 }
 

@@ -5,7 +5,7 @@ pub trait Square {
 }
 
 impl<F: Mul<F, Output = Self> + Copy> Square for F {
-    default fn square(&self) -> Self {
+    fn square(&self) -> Self {
         *self * *self
     }
 }
