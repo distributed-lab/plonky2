@@ -18,7 +18,6 @@ std = ["anyhow/std", "plonky2/std"]
 timing = ["plonky2/timing"]
 
 [dependencies]
-ahash = { workspace = true }
 anyhow = { workspace = true }
 hashbrown = { workspace = true }
 itertools = { workspace = true }

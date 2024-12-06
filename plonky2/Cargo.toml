@@ -12,20 +12,19 @@ keywords.workspace = true
 categories.workspace = true
 
 [features]
-default = ["gate_testing", "parallel", "rand_chacha", "std", "timing"]
+default = ["gate_testing", "parallel", "std", "timing"]
 gate_testing = []
 parallel = ["hashbrown/rayon", "plonky2_maybe_rayon/parallel"]
 std = ["anyhow/std", "rand/std", "itertools/use_std"]
 timing = ["std", "dep:web-time"]
 
 [dependencies]
-ahash = { workspace = true }
 anyhow = { workspace = true }
 hashbrown = { workspace = true }
 itertools = { workspace = true }
 keccak-hash = { version = "0.8.0", default-features = false }
 log = { workspace = true }
-num = { workspace = true }
+num = { workspace = true, features = ["alloc", "rand"] }
 rand = { workspace = true }
 rand_chacha = { version = "0.3.1", optional = true, default-features = false }
 serde = { workspace = true, features = ["rc"] }
@@ -39,14 +38,10 @@ plonky2_maybe_rayon = { version = "1.0.0", path = "../maybe_rayon", default-feat
 plonky2_util = { version = "1.0.0", path = "../util", default-features = false }
 
 
-[target.'cfg(all(target_arch = "wasm32", target_os = "unknown"))'.dependencies]
-getrandom = { version = "0.2", default-features = false, features = ["js"] }
-
 [dev-dependencies]
 criterion = { version = "0.5.1", default-features = false }
 env_logger = { version = "0.9.0", default-features = false }
 num_cpus = { version = "1.14.0", default-features = false }
-rand = { workspace = true, features = ["getrandom"] }
 rand_chacha = { version = "0.3.1", default-features = false }
 serde_cbor = { version = "0.11.2" }
 serde_json = { version = "1.0" }
